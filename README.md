@@ -1,16 +1,5 @@
-# riverpod_practice
+# DIU Result
 
-A new Flutter project.
+### App Demo
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screen Recording 2025-05-08 at 12 02 53 AM](https://github.com/user-attachments/assets/ae660f7f-9db7-440a-85e8-1f9c29c4255d)
