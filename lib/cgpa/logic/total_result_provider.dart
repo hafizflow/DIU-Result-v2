@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_practice/cgpa/data/models/result_model.dart';
 import 'package:riverpod_practice/cgpa/data/models/semester_sgpa_model.dart';
 import 'package:riverpod_practice/cgpa/data/models/total_result_model.dart';
 import 'package:riverpod_practice/cgpa/logic/result_provider.dart';
@@ -9,6 +10,7 @@ final totalResultProvider = Provider<TotalResultModel>((ref) {
   double totalPoints = 0.0;
   double totalCredits = 0.0;
   List<SemesterSgpaModel> semesterSgpaData = [];
+  List<Result> resultList = [];
 
   for (var semester in allResults) {
     semesterSgpaData.add(
@@ -17,9 +19,17 @@ final totalResultProvider = Provider<TotalResultModel>((ref) {
         semester.first.cgpa,
       ),
     );
-    for (var result in semester) {
-      totalPoints += (result.pointEquivalent) * (result.totalCredit);
-      totalCredits += (result.totalCredit);
+    resultList.addAll(semester);
+  }
+
+  Set<String> processedCourses = {};
+
+  for (var result in resultList) {
+    totalPoints += (result.pointEquivalent) * (result.totalCredit);
+
+    if (!processedCourses.contains(result.courseTitle)) {
+      totalCredits += result.totalCredit;
+      processedCourses.add(result.courseTitle);
     }
   }
 

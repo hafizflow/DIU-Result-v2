@@ -31,17 +31,9 @@ final resultListProvider = FutureProvider<List<List<Result>>>((ref) async {
   for (String semesterId in validSemesters) {
     final results = await repo.fetchResults(studentId, semesterId);
     List<Result> currentSemesterResult = [];
-    int count = 0;
+    currentSemesterResult.addAll(results);
 
-    if (count == 0 && currentSemesterResult.isEmpty) {
-      count++;
-      final results = await repo.fetchResults(studentId, semesterId);
-      currentSemesterResult.addAll(results);
-    } else {
-      currentSemesterResult.addAll(results);
-    }
-
-    if (currentSemesterResult.isNotEmpty) {
+    if (currentSemesterResult.isNotEmpty && currentSemesterResult.length > 1) {
       allResults.add(currentSemesterResult);
     }
   }

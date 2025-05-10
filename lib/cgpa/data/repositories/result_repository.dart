@@ -27,6 +27,9 @@ class ResultRepository {
   Future<List<Semester>> fetchSemesters() async {
     try {
       final response = await _dio.get(ApiConstants.semesterListEndpoint);
+      if (response.data == null || (response.data as List).isEmpty) {
+        return [];
+      }
       return (response.data as List)
           .map((json) => Semester.fromJson(json))
           .toList();

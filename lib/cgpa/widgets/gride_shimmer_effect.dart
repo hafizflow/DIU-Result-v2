@@ -7,6 +7,7 @@ class GridShimmerEffect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: 8,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -24,7 +25,10 @@ class GridShimmerEffect extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: .25),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade50, width: 0.5),
+              border: Border.all(
+                color: Colors.grey.withValues(alpha: 0.5),
+                width: 0.5,
+              ),
             ),
             child: Center(
               child: Column(

@@ -7,17 +7,43 @@ import 'package:riverpod_practice/cgpa/widgets/custom_route.dart';
 import 'package:riverpod_practice/cgpa/widgets/custom_search_field.dart';
 import 'package:riverpod_practice/cgpa/widgets/dev_info.dart';
 import 'package:riverpod_practice/cgpa/widgets/gride_shimmer_effect.dart';
-import 'package:riverpod_practice/cgpa/widgets/initial_animation.dart';
+import 'package:riverpod_practice/cgpa/widgets/page_title.dart';
 import 'package:riverpod_practice/cgpa/widgets/sgpa_card.dart';
 import 'package:riverpod_practice/cgpa/widgets/student_info_card.dart';
 import 'package:riverpod_practice/sgpa/widgets/error_message.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(resultListProvider);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final resultAsync = ref.watch(resultListProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -26,27 +52,28 @@ class ResultScreen extends ConsumerWidget {
             children: [
               const DevInfo(),
               Column(
-                spacing: 16,
                 children: [
-                  Text(
-                    'DIU Result CGPA',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-
+                  const PageTitle(title: 'DIU Result CGPA'),
+                  const SizedBox(height: 16),
                   const CustomSearchField(),
+                  const SizedBox(height: 16),
                   const StudentInfoCard(),
+                  const SizedBox(height: 16),
                   Expanded(
                     child: resultAsync.when(
                       data: (results) {
                         if (results.isEmpty) {
-                          return const InitialAnimation(
-                            animationPath: 'assets/a.json',
+                          // return const InitialAnimation();
+                          return const Center(
+                            child: Text(
+                              'No Result Found',
+                              style: TextStyle(fontSize: 18),
+                            ),
                           );
                         }
                         return AnimationLimiter(
                           child: GridView.builder(
                             physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
                             itemCount: results.length,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -68,17 +95,18 @@ class ResultScreen extends ConsumerWidget {
                                 child: ScaleAnimation(
                                   child: FadeInAnimation(
                                     child: GestureDetector(
-                                      onTap:
-                                          () => Navigator.push(
-                                            context,
-                                            CustomRoute(
-                                              page: DetailsResultScreen(
-                                                result: semesterResults,
-                                                semesterNameYear:
-                                                    semesterNameYear,
-                                              ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CustomRoute(
+                                            page: DetailsResultScreen(
+                                              result: semesterResults,
+                                              semesterNameYear:
+                                                  semesterNameYear,
                                             ),
                                           ),
+                                        );
+                                      },
                                       child: SgpaCard(first: first),
                                     ),
                                   ),

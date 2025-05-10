@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:riverpod_practice/cgpa/data/models/result_model.dart';
+import 'package:riverpod_practice/cgpa/widgets/page_title.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/core%20/constants/grade_color.dart';
+import 'package:riverpod_practice/sgpa/logic/semester_list_provider.dart';
 import 'package:riverpod_practice/sgpa/logic/sgpa_result_provider.dart';
 import 'package:riverpod_practice/sgpa/widgets/error_message.dart';
-import 'package:riverpod_practice/sgpa/widgets/semester_code_field.dart';
+import 'package:riverpod_practice/sgpa/widgets/semester_dropdown.dart';
 import 'package:riverpod_practice/sgpa/widgets/sgpa_search_field.dart';
 import 'package:riverpod_practice/sgpa/widgets/sgpa_student_info_card.dart';
 
@@ -17,39 +19,17 @@ class SgpaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final resultAsync = ref.watch(sgpaResultListProvider);
 
-    final semesterName = resultAsync.when(
-      data: (results) {
-        if (results.isNotEmpty) {
-          return '${results[0].semesterName} ${results[0].semesterYear}';
-        }
-        return '';
-      },
-      error: (e, st) => '',
-      loading: () => '',
-    );
-
     return Scaffold(
-      floatingActionButton: const SemesterCodeField(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: Column(
             spacing: 16,
             children: [
-              Text(
-                'DIU Result SGPA',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              const PageTitle(title: 'DIU Result SGPA'),
+              const SemesterDropDown(),
               const SgpaSearchField(),
               const SgpaStudentInfoCard(),
-              if (semesterName != '' || semesterName.isNotEmpty)
-                Text(
-                  semesterName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               resultList(resultAsync),
             ],
           ),

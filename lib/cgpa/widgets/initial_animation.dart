@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class InitialAnimation extends StatelessWidget {
-  const InitialAnimation({super.key, required this.animationPath});
-
-  final String animationPath;
+  const InitialAnimation({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class InitialAnimation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Lottie.asset(
-                animationPath,
+                'assets/a.json',
                 width: MediaQuery.sizeOf(context).width * .8,
                 height: MediaQuery.sizeOf(context).height * .4,
                 fit: BoxFit.fitWidth,
