@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:riverpod_practice/cgpa/widgets/safe_on_tap.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/cgpa/widgets/custom_snackbar.dart';
 import 'package:riverpod_practice/sgpa/logic/sgpa_student_info_provider.dart';
@@ -43,6 +44,15 @@ class _SgpaSearchFieldState extends ConsumerState<SgpaSearchField> {
   }
 
   void searchResult() async {
+    // First check internet connection
+    final hasInternet = await SafeOnTap.hasInternetWithFeedback(
+      context: context,
+      showSnackbar: true,
+    );
+
+    // Exit immediately if no internet
+    if (!hasInternet) return;
+
     ref.read(sIdProvider.notifier).state = '';
     FocusScope.of(context).unfocus();
     final studentId = sId.text.trim();
@@ -57,7 +67,7 @@ class _SgpaSearchFieldState extends ConsumerState<SgpaSearchField> {
           customSnackBar(
             title: 'On Snap!',
             message: 'Please insert Student-ID',
-            contentType: ContentType.failure,
+            contentType: ContentType.warning,
           ),
         );
     } else {

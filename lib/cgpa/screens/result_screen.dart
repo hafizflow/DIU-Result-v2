@@ -7,6 +7,7 @@ import 'package:riverpod_practice/cgpa/widgets/custom_route.dart';
 import 'package:riverpod_practice/cgpa/widgets/custom_search_field.dart';
 import 'package:riverpod_practice/cgpa/widgets/dev_info.dart';
 import 'package:riverpod_practice/cgpa/widgets/gride_shimmer_effect.dart';
+import 'package:riverpod_practice/cgpa/widgets/initial_animation.dart';
 import 'package:riverpod_practice/cgpa/widgets/page_title.dart';
 import 'package:riverpod_practice/cgpa/widgets/sgpa_card.dart';
 import 'package:riverpod_practice/cgpa/widgets/student_info_card.dart';
@@ -21,6 +22,8 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 class _ResultScreenState extends ConsumerState<ResultScreen>
     with WidgetsBindingObserver {
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
 
   @override
   void dispose() {
+    _scrollController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -36,7 +40,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      ref.invalidate(resultListProvider);
+      ref.refresh(resultListProvider.future).then((_) {}).catchError((error) {
+        debugPrint('Error refreshing data: $error');
+      });
     }
   }
 
@@ -45,6 +51,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
     final resultAsync = ref.watch(resultListProvider);
 
     return Scaffold(
+      key: const ValueKey('resultScreen'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -63,16 +70,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen>
                     child: resultAsync.when(
                       data: (results) {
                         if (results.isEmpty) {
-                          // return const InitialAnimation();
-                          return const Center(
-                            child: Text(
-                              'No Result Found',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          );
+                          return resultAsync.isLoading
+                              ? const GridShimmerEffect()
+                              : const InitialAnimation();
                         }
                         return AnimationLimiter(
                           child: GridView.builder(
+                            controller: _scrollController,
                             physics: const BouncingScrollPhysics(),
                             itemCount: results.length,
                             gridDelegate:

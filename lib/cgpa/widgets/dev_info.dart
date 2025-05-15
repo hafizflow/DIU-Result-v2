@@ -30,9 +30,10 @@ class DevInfo extends StatelessWidget {
                       children: <TextSpan>[
                         const TextSpan(
                           text:
-                              "Assalamualaikum, I’ve put my best to make the app user-friendly, "
-                              "but there may still be some bugs or unexpected issues. "
-                              "I sincerely apologize for any inconvenience caused.\n\n"
+                              "Assalamu Alaikum, "
+                              "Thank you for using this application. Please note that this app relies entirely on DIU server to display results. "
+                              "During times of high traffic, the server may become overcrowded, which could cause delays in loading the results. "
+                              "I kindly ask for your patience and understanding.\n\n"
                               "Developed By ",
                         ),
                         TextSpan(

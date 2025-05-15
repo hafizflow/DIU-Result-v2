@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:riverpod_practice/cgpa/widgets/safe_on_tap.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/cgpa/logic/result_provider.dart';
 import 'package:riverpod_practice/cgpa/logic/student_info_provider.dart';
@@ -16,16 +17,28 @@ class CustomSearchField extends ConsumerStatefulWidget {
 
 class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
   final studentIdController = TextEditingController();
+  final FocusNode _focusNode = FocusNode(); // Create local focus node
 
   @override
   void dispose() {
     studentIdController.dispose();
+    _focusNode.dispose(); // Dispose the focus node
     super.dispose();
   }
 
   void searchResult() async {
+    // First check internet connection
+    final hasInternet = await SafeOnTap.hasInternetWithFeedback(
+      context: context,
+      showSnackbar: true,
+    );
+
+    // Exit immediately if no internet
+    if (!hasInternet) return;
+
+    // Only proceed with the rest if we have internet
     ref.read(studentIdProvider.notifier).state = '';
-    FocusScope.of(context).unfocus();
+    _focusNode.unfocus();
     final studentId = studentIdController.text.trim();
     ref.invalidate(resultListProvider);
 
@@ -39,7 +52,7 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
           customSnackBar(
             title: 'On Snap!',
             message: 'Please insert Student-ID',
-            contentType: ContentType.failure,
+            contentType: ContentType.warning,
           ),
         );
     } else {
@@ -51,9 +64,10 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: _focusNode,
       controller: studentIdController,
       maxLength: 20,
-      onTapOutside: (_) => FocusScope.of(context).unfocus(),
+      onTapOutside: (_) => _focusNode.unfocus(),
       style: const TextStyle(
         color: ColorConstants.offWhite,
         fontSize: 20,
@@ -66,6 +80,7 @@ class _CustomSearchFieldState extends ConsumerState<CustomSearchField> {
         }
         return null;
       },
+      onTap: () => _focusNode.requestFocus(),
       onFieldSubmitted: (_) => searchResult(),
       decoration: InputDecoration(
         hintText: 'Enter Your ID',

@@ -1,25 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:riverpod_practice/cgpa/data/models/result_model.dart';
 import 'package:riverpod_practice/cgpa/widgets/page_title.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/core%20/constants/grade_color.dart';
-import 'package:riverpod_practice/sgpa/logic/semester_list_provider.dart';
 import 'package:riverpod_practice/sgpa/logic/sgpa_result_provider.dart';
+import 'package:riverpod_practice/sgpa/model/sgpa_model.dart';
 import 'package:riverpod_practice/sgpa/widgets/error_message.dart';
 import 'package:riverpod_practice/sgpa/widgets/semester_dropdown.dart';
 import 'package:riverpod_practice/sgpa/widgets/sgpa_search_field.dart';
 import 'package:riverpod_practice/sgpa/widgets/sgpa_student_info_card.dart';
 
-class SgpaPage extends ConsumerWidget {
+class SgpaPage extends ConsumerStatefulWidget {
   const SgpaPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SgpaPage> createState() => _SgpaPageState();
+}
+
+class _SgpaPageState extends ConsumerState<SgpaPage>
+    with WidgetsBindingObserver {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.refresh(sgpaResultListProvider.future).then((_) {}).catchError((
+        error,
+      ) {
+        debugPrint('Error refreshing data: $error');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final resultAsync = ref.watch(sgpaResultListProvider);
 
     return Scaffold(
+      key: const ValueKey('sgpaScreen'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -30,7 +62,7 @@ class SgpaPage extends ConsumerWidget {
               const SemesterDropDown(),
               const SgpaSearchField(),
               const SgpaStudentInfoCard(),
-              resultList(resultAsync),
+              _buildResultList(resultAsync),
             ],
           ),
         ),
@@ -38,7 +70,7 @@ class SgpaPage extends ConsumerWidget {
     );
   }
 
-  Expanded resultList(AsyncValue<List<Result>> resultAsync) {
+  Expanded _buildResultList(AsyncValue<List<SgpaResult>> resultAsync) {
     return Expanded(
       child: resultAsync.when(
         data: (results) {
@@ -48,6 +80,7 @@ class SgpaPage extends ConsumerWidget {
 
           return AnimationLimiter(
             child: ListView.separated(
+              controller: _scrollController,
               shrinkWrap: true,
               physics: const BouncingScrollPhysics(),
               itemCount: results.length,
