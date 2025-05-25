@@ -48,11 +48,10 @@ class StudentInfoCard extends ConsumerWidget {
               ),
           child: Stack(
             children: [
-              // Actual Card Content
               Container(
                 width: MediaQuery.sizeOf(context).width,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade700),
+                  border: Border.all(color: Colors.blue.shade300, width: 0.3),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Card(

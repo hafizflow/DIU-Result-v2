@@ -12,7 +12,7 @@ class SgpaCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: ColorConstants.offDark,
-        border: Border.all(color: Colors.grey.shade700),
+        border: Border.all(color: Colors.blue.shade300, width: 0.3),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Center(

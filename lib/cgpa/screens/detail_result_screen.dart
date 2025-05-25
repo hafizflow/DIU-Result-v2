@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:glowy_borders/glowy_borders.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/cgpa/data/models/result_model.dart';
 import 'package:riverpod_practice/cgpa/widgets/background.dart';
@@ -29,13 +30,43 @@ class DetailsResultScreen extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: BackButton(color: ColorConstants.offWhite),
                 ),
-                Text(
-                  semesterNameYear,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                AnimatedGradientBorder(
+                  borderSize: 1,
+                  glowSize: 0,
+                  gradientColors: const [
+                    Colors.blueAccent,
+                    ColorConstants.contentColorCyan,
+                    ColorConstants.contentColorBlue,
+                  ],
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: ColorConstants.offDark,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'GPA: ${result.first.cgpa.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          semesterNameYear,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          'Credit: ${result.fold(0, (previousValue, element) => previousValue + element.totalCredit.toInt())}',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+
                 const SizedBox(height: 16),
 
-                // ...
                 Expanded(
                   child: AnimationLimiter(
                     child: ListView.separated(

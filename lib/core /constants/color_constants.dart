@@ -14,4 +14,6 @@ class ColorConstants {
 
   static const Color contentColorYellow = Color(0xFFFFC300);
   static const Color contentColorOrange = Color(0xFFFF683B);
+
+  static var primary;
 }

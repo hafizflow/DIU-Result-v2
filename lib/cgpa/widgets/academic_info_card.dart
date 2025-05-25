@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_practice/cgpa/widgets/animated_academicinfo.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
-import 'package:riverpod_practice/core%20/constants/wish_messages.dart';
 import 'package:riverpod_practice/cgpa/logic/result_provider.dart';
 import 'package:riverpod_practice/cgpa/logic/total_result_provider.dart';
 import 'package:riverpod_practice/cgpa/widgets/academic_bar_chart.dart';
-import 'package:riverpod_practice/cgpa/widgets/student_info_text.dart';
 
 class AcademicInfoCard extends ConsumerWidget {
   const AcademicInfoCard({super.key});
@@ -30,53 +29,11 @@ class AcademicInfoCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Academic Information',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PersonalInfoText(
-                        label: 'Year ',
-                        data: (allResult.length / 2)
-                            .floorToDouble()
-                            .toStringAsFixed(0),
-                      ),
-                      const SizedBox(height: 2),
-                      PersonalInfoText(
-                        label: 'Credit ',
-                        data: controller.totalCredits.toStringAsFixed(0),
-                      ),
-                      const SizedBox(height: 2),
-                      PersonalInfoText(
-                        label: 'Semester ',
-                        data: allResult.length.toString(),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 60,
-                    width: 150,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 0.3),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Center(
-                      child: Text(
-                        WishMessages.motivationalMessage(totalResult.cgpa),
-                      ),
-                    ),
-                  ),
-                ],
+              AnimatedAcademicInfo(
+                cgpa: totalResult.cgpa,
+                totalCredits: controller.totalCredits,
+                semesterCount: allResult.length,
+                yearCount: (allResult.length / 2).floor(),
               ),
               const SizedBox(height: 24),
               const AcademicBarChart(), // Ensure the BarChart widget is defined and imported correctly
