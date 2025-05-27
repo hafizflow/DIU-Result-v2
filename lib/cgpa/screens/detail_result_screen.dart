@@ -36,7 +36,6 @@ class DetailsResultScreen extends StatelessWidget {
                   gradientColors: const [
                     Colors.blueAccent,
                     ColorConstants.contentColorCyan,
-                    ColorConstants.contentColorBlue,
                   ],
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
@@ -50,15 +49,21 @@ class DetailsResultScreen extends StatelessWidget {
                       children: [
                         Text(
                           'GPA: ${result.first.cgpa.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(fontSize: 18),
                         ),
                         Text(
                           semesterNameYear,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(fontSize: 18),
                         ),
                         Text(
                           'Credit: ${result.fold(0, (previousValue, element) => previousValue + element.totalCredit.toInt())}',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(fontSize: 18),
                         ),
                       ],
                     ),

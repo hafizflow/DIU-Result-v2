@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:riverpod_practice/cgpa/widgets/page_title.dart';
 import 'package:riverpod_practice/core%20/constants/color_constants.dart';
 import 'package:riverpod_practice/core%20/constants/grade_color.dart';
@@ -188,8 +189,9 @@ class _SgpaPageState extends ConsumerState<SgpaPage>
         },
         error: (e, st) => ErrorMessage(errorMessage: e),
         loading:
-            () => const Center(
-              child: CircularProgressIndicator(
+            () => Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                size: 50,
                 color: ColorConstants.contentColorCyan,
               ),
             ),
