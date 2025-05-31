@@ -14,21 +14,28 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
-      - run: flutter pub get
-      
 
-      - run: pod repo update
+      - run: flutter pub get
+
+      - name: Clean old builds
+        run: flutter clean
+
+      - name: Update CocoaPods repo
+        run: pod repo update
         working-directory: ios
 
-      - run: flutter build ios --release --no-codesign
+      - name: Build iOS app (Release)
+        run: flutter build ios --release --no-codesign
 
-      - run: mkdir Payload
+      - name: Create Payload directory
+        run: mkdir Payload
         working-directory: build/ios/iphoneos
 
-      - run: mv Runner.app/ Payload
+      - name: Move app to Payload
+        run: mv Runner.app/ Payload
         working-directory: build/ios/iphoneos
 
-      - name: Zip output
+      - name: Zip IPA
         run: zip -qq -r -9 FlutterIpaExport.ipa Payload
         working-directory: build/ios/iphoneos
 
@@ -40,3 +47,4 @@ jobs:
           tag: v1.0
           overwrite: true
           body: "This is first release"
+
