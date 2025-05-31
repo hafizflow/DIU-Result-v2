@@ -30,12 +30,14 @@ class DetailsResultScreen extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: BackButton(color: ColorConstants.offWhite),
                 ),
+                const SizedBox(height: 4),
                 AnimatedGradientBorder(
                   borderSize: 1,
                   glowSize: 0,
                   gradientColors: const [
                     Colors.blueAccent,
                     ColorConstants.contentColorCyan,
+                    Colors.green,
                   ],
                   borderRadius: BorderRadius.circular(8),
                   child: Container(

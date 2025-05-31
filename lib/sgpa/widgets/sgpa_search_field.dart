@@ -116,7 +116,8 @@ class _SgpaSearchFieldState extends ConsumerState<SgpaSearchField> {
         ),
       ),
       cursorColor: Colors.white,
-      keyboardType: const TextInputType.numberWithOptions(),
+      keyboardType: const TextInputType.numberWithOptions(signed: true),
+      keyboardAppearance: Brightness.dark,
       textInputAction: TextInputAction.search,
     );
   }
